@@ -10,7 +10,7 @@
 ## Domain
 
 <!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
-
+Student review of the physics classes at GMU. Engineering majors are required to take physics (up to physics 3) as part of their degree requirement. Words goes arround that the physics classes can be a bit "interesting," and for a foundational class such as physics, you really want a good instructors that maintain your interest while teaching.
 ---
 
 ## Documents
@@ -20,11 +20,11 @@
 
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | GMU | Physics Requirements for Electrical Engineer | https://catalog.gmu.edu/colleges-schools/engineering-computing/engineering/electrical-computer/electrical-engineering-bs/index.html#requirementstext |
+| 2 | r/GMU |  | https://www.reddit.com/r/gmu/comments/7kfrp6/physics_major_at_gmu/ |
+| 3 |Rate My Professor | Physics Professors Review| https://www.ratemyprofessors.com/search/professors/352?q=*&did=44 |
+| 4 | GMU Physics Professor | Spring 2022 Phys 262 Syllabus | http://complex.gmu.edu/www-phys/phys262/ |
+| 5 | Coursicle | Phys 262 Reviews | https://www.coursicle.com/gmu/courses/PHYS/262/ |
 | 6 | | | |
 | 7 | | | |
 | 8 | | | |
@@ -41,6 +41,10 @@
      A review-heavy corpus warrants different chunking than a long FAQ. -->
 
 **Chunk size:**
+
+RMP reviews could likely be fixed chunk, fitting the whole review. 
+Syllabus would likely use recursive since the the syllabus is organized by topics.
+
 
 **Overlap:**
 

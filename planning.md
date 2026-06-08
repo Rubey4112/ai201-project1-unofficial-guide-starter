@@ -10,7 +10,8 @@
 ## Domain
 
 <!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
-Student review of the physics classes at GMU. Engineering majors are required to take physics (up to physics 3) as part of their degree requirement. Words goes arround that the physics classes can be a bit "interesting," and for a foundational class such as physics, you really want a good instructors that maintain your interest while teaching.
+Student life, events and activites for GMU students and around the DMV area. This is particularly hard for student, especially incoming freshman, since GMU is mainly commuter school. If you commute to campus, you often don't get to spend as much time around people that know the place for parties, underground venue, or other fun (ideally low cost) entertainment activies around the DMV area.
+
 ---
 
 ## Documents
@@ -20,16 +21,16 @@ Student review of the physics classes at GMU. Engineering majors are required to
 
 | # | Source | Description | URL or location |
 |---|--------|-------------|-----------------|
-| 1 | GMU | Physics Requirements for Electrical Engineer | https://catalog.gmu.edu/colleges-schools/engineering-computing/engineering/electrical-computer/electrical-engineering-bs/index.html#requirementstext |
-| 2 | r/GMU |  | https://www.reddit.com/r/gmu/comments/7kfrp6/physics_major_at_gmu/ |
-| 3 |Rate My Professor | Physics Professors Review| https://www.ratemyprofessors.com/search/professors/352?q=*&did=44 |
-| 4 | GMU Physics Professor | Spring 2022 Phys 262 Syllabus | http://complex.gmu.edu/www-phys/phys262/ |
-| 5 | Coursicle | Phys 262 Reviews | https://www.coursicle.com/gmu/courses/PHYS/262/ |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| 1 | r/gmu | Anyone have any tips for incoming GMU freshman? | https://www.reddit.com/r/gmu/comments/1k9mks/anyone_have_any_tips_for_incoming_gmu_freshman/|
+| 2 | r/gmu | Looking at going to gmu, what is there to do for fun around gmu?  | https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/ |
+| 3 | Bond's Escape Room | Things to do near GMU Guide | https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide |
+| 4 | GMU | Patriot Perk things to do | https://patriotperks.gmu.edu/things-to-do/ |
+| 5 | GMU | Patriot Perk food and drinks | https://patriotperks.gmu.edu/food-drink/ |
+| 6 | Blog | My 11 Favorite Things to Do in Fairfax, VA (From a Local) | https://virginiavacationguide.com/things-to-do-in-fairfax-va/ |
+| 7 | DC's Website | Music Venues in DC | https://washington.org/visit-dc/live-music-venues-washington-dc |
+| 8 | DC's Website | DC Bucket List | https://washington.org/visit-dc/bucket-list |
+| 9 | DC's Website | DC Bucket List 2 | https://washington.org/visit-dc/your-washington-dc-summer-bucket-list |
+| 10 | Blog | Things to do in Alexandria VA | https://www.funinfairfaxva.com/things-to-do-in-alexandria-va/ |
 
 ---
 

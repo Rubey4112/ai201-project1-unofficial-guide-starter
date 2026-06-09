@@ -48,22 +48,16 @@ Each chunk would have metadata.
 
 **Chunk size:**
 
-Recursive chunking with a size of 125 words.
+Recursive chunking with a size of 150 words.
 Min words count of 8 words
-
 
 **Overlap:**
 
 8 words overlap
 
 **Reasoning:**
-RMP reviews would be fixed chunk, fitting the whole review. 
-Syllabus would use recursive since the the syllabus is organized by topics.
-Long Reddit post would likely get sementic since there is a shared themed through out the post but it might not be clearly defined.
 
-But to keep it simple. I am going to use recursive chunking
-
-Most of the document will be reviews, maybe some syllabus. Reviews are often short, less than 150 words. So each chunk should just be one reviews. Overlap really needed but it is there for the rare long reviews and the syllabus documents.
+Most of the document will be guide and reviews. Some guide are long but some are short. I found that ~150 woords chunk capture each document nicely.
 
 ---
 
@@ -75,15 +69,17 @@ Most of the document will be reviews, maybe some syllabus. Reviews are often sho
      would you weigh in choosing a different embedding model — context length, multilingual
      support, accuracy on domain-specific text, latency? -->
 
-I would use a hybrid serach model. Since if the user searches for a specific course with a course number i.e Phys 262, the retrival would need to find all document related to Phys 262.
+I would use a pure sementic search model.
 
 **Embedding model:**
 all-MiniLM-L6-v2 via sentence-transformers
 
 **Top-k:**
-5-chunks
+7-chunks
 
 **Production tradeoff reflection:**
+Lower chunk reduce token cost but might give the LLM too little context. Since the chunks are quite small and user might ask broad questions, I put the top-k = 7 so that the LLM can have more context at the expense of token cost.
+I went with pure sementic search currently since it is the simplest solution, but a hybrid search with a keyword index using BM25 would be better.
 
 ---
 
@@ -96,11 +92,11 @@ all-MiniLM-L6-v2 via sentence-transformers
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
-| 1 | What topics is covered in GMU Phys 262 | |
+| 1 | | |
 | 2 | | |
 | 3 | | |
 | 4 | | |
-| 5 | | |
+| 5 | What's the best professor for MATH214 | System should refuse to response since it is outside it's domain  |
 
 ---
 
@@ -110,9 +106,9 @@ all-MiniLM-L6-v2 via sentence-transformers
      Consider: noisy or inconsistent documents, missing source attribution, off-topic
      retrieval, chunks that split key information across boundaries. -->
 
-1. Noisy and inconsistent documents is my biggest worry. The difference between a syllabus, a RMP review, and a reddit thread will likely cause my indexer to to index irrelevant content and fill the database.
+1. Gathering the documents are a pain in the bum. Each website are formatted differently. I am planning to manually copy and paste each website into a markdown file so that I don't have to deal with cleaning boileplate like HTML tags, navigation menus, cookie banners, ads, etc. 
 
-2. My current plan for the chunking system is not that robust, it might split information, like the instructor who taught the class, between chunking.
+2. My current plan for the chunking system is not that robust, it might split information like the locations from the reviews. 
 
 ---
 
@@ -123,6 +119,15 @@ all-MiniLM-L6-v2 via sentence-transformers
      Label each stage with the tool or library you're using.
      You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
      You'll use this diagram as context when prompting AI tools to implement each stage. -->
+
+```mermaid
+flowchart LR
+    A[Manual .md documents] --> B[Chunk document. 150 words with 8 words overlap]
+    B --> C[Embed chunk locally using all-MiniLM-L6-v2]
+    C --> D[Store locally in ChromaDB]
+    D --> E[Retrive the top 7 chunks]
+    E --> F[Generate using Groq's llama-3.3-70b-versatile]
+```
 
 ---
 

@@ -2,8 +2,8 @@ import pytest
 
 from rag_engine.ingest import chunk_document, load_documents
 
-CHUNK_SIZE = 150
-OVERLAP = 8
+CHUNK_SIZE = 100
+OVERLAP = 20
 MIN_WORDS = 8
 
 # Load once at collection time so both fixture sets share the same data.

@@ -57,8 +57,8 @@ def chunk_document(doc: dict) -> dict:
         metadatas — list of dicts (title, source, url) — one per chunk
         ids       — list of unique SHA-256 hex strings for ChromaDB deduplication
     """
-    chunk_size = 150
-    overlap = 8
+    chunk_size = 100
+    overlap = 20
     min_words = 8
 
     words = doc["text"].split()

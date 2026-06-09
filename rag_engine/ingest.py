@@ -1,0 +1,80 @@
+import hashlib
+import re
+from pathlib import Path
+
+DOCUMENTS_DIR = Path(__file__).parent.parent / "documents"
+
+
+def _parse_frontmatter(content: str) -> tuple[dict, str]:
+    match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
+    if not match:
+        return {}, content
+    body = content[match.end():]
+    metadata = {}
+    for line in match.group(1).splitlines():
+        if ":" in line:
+            key, _, value = line.partition(":")
+            metadata[key.strip()] = value.strip().strip('"')
+    return metadata, body
+
+
+def load_documents() -> list[dict]:
+    """
+    Load all .md files from the documents folder.
+
+    Returns a list of dicts, each with:
+        text   — body text (frontmatter stripped)
+        title  — document title
+        source — source name (e.g. "r/gmu")
+        url    — link to original document
+    """
+    docs = []
+    for path in sorted(DOCUMENTS_DIR.glob("*.md")):
+        if path.name == ".gitkeep":
+            continue
+        content = path.read_text(encoding="utf-8")
+        metadata, body = _parse_frontmatter(content)
+        docs.append(
+            {
+                "text": body.strip(),
+                "title": metadata.get("title", path.stem),
+                "source": metadata.get("source", ""),
+                "url": metadata.get("url", ""),
+            }
+        )
+    return docs
+
+
+def chunk_document(doc: dict) -> dict:
+    """
+    Chunk a single document using a sliding word window.
+
+    Strategy (from planning.md):
+        chunk_size = 150 words, overlap = 8 words, min_words = 8
+
+    Returns a dict with:
+        chunks    — list of chunk strings
+        metadatas — list of dicts (title, source, url) — one per chunk
+        ids       — list of unique SHA-256 hex strings for ChromaDB deduplication
+    """
+    chunk_size = 150
+    overlap = 8
+    min_words = 8
+
+    words = doc["text"].split()
+    chunks: list[str] = []
+    start = 0
+    while start < len(words):
+        window = words[start : start + chunk_size]
+        if len(window) >= min_words:
+            chunks.append(" ".join(window))
+        start += chunk_size - overlap
+
+    meta = {"title": doc["title"], "source": doc["source"], "url": doc["url"]}
+    metadatas = [meta for _ in chunks]
+    ids = [
+        hashlib.sha256(f"{doc['url']}::chunk_{i}".encode()).hexdigest()[:32]
+        for i in range(len(chunks))
+    ]
+
+    return {"chunks": chunks, "metadatas": metadatas, "ids": ids}

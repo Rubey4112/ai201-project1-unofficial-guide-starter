@@ -147,6 +147,8 @@ flowchart LR
 I am planning to use Claude as my AI peer coder. I plan to give it this planning document and have it poke holes into my plan so that I can see where in the plan I need to improve.
 
 **Milestone 3 — Ingestion and chunking:**
+
+Initial document gathering will be done by a scraping script written by AI.
 All document are in a normalized markdown format.
 
 load_documents(): it load all the document from the `/documents` folder. Return a list of dictionaries. Each dictionary represent a document, it contain the text, title, and link to the document.
@@ -154,9 +156,13 @@ load_documents(): it load all the document from the `/documents` folder. Return 
 chunk_document(): it take the document text and chunk it based on the chunking strategy mentioned above. Return a dictionary containing the list of chunks, metadatas including the document name and links, and an unique idea for dedeuplication for ChromaDB
 
 **Milestone 4 — Embedding and retrieval:**
+
 embed_and_store(): take a list of chunk and store it in the ChromaDB database using all-MiniLM-L6-v2
 
 retrive(): take a query and a top-k (7) value, return the top-k chunks, which include the text, the metadatas and the distance.
 
 **Milestone 5 — Generation and interface:**
+
 generate_response(): take the user query and the retrived chunk and generate a responser. Recommend only locations that are retrived from the text. Identify where the recommendation came from. Acknowledge clearly if there are no locations that fit the user criteria or if the question is outside the agent domain.
+
+For now, there will only be a CLI interface. It feature a debug mode where I can test run the chunk retrival based on the user query, and a dry-run mode where I can see the prompt that will be sent to the LLM.

@@ -80,6 +80,7 @@ all-MiniLM-L6-v2 via sentence-transformers
 **Production tradeoff reflection:**
 Lower chunk reduce token cost but might give the LLM too little context. Since the chunks are quite small and user might ask broad questions, I put the top-k = 7 so that the LLM can have more context at the expense of token cost.
 I went with pure sementic search currently since it is the simplest solution, but a hybrid search with a keyword index using BM25 would be better.
+all-MiniLM-L6-v2 is not as accurate as larger model but it is free and can be run locally.
 
 ---
 
@@ -92,10 +93,10 @@ I went with pure sementic search currently since it is the simplest solution, bu
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
+| 1 | What are some student discount available for GMU students | System should list specific restaurants or deals from the Patriot Perks food & drink page (e.g., specific discounts at named local restaurants) |
+| 2 | What are some popular live music venues around the DMV area? | System should name specific venues from the DC music venues source: 9:30 Club, The Anthem, Black Cat |
+| 3 | What are some advice to incoming freshman about joining the community at GMU | System should surface specific tips from the r/gmu threads. E.g., joining clubs, attending on-campus events and cite the Reddit source |
+| 4 | What are some low-cost or free things to do near GMU's Fairfax campus on a weekend? | System should recommend specific activities from the Fairfax VA and Patriot Perks sources |
 | 5 | What's the best professor for MATH214 | System should refuse to response since it is outside it's domain  |
 
 ---
@@ -143,10 +144,19 @@ flowchart LR
      "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
      with my specified chunk size and overlap" is a plan. -->
 
-I am plannign to use Claude as myy AI peer coder. I plan to give it this planning document and have it poke holes into my plan so that I can see where in the plan I need to improve.
+I am planning to use Claude as my AI peer coder. I plan to give it this planning document and have it poke holes into my plan so that I can see where in the plan I need to improve.
 
 **Milestone 3 — Ingestion and chunking:**
+All document are in a normalized markdown format.
+
+load_documents(): it load all the document from the `/documents` folder. Return a list of dictionaries. Each dictionary represent a document, it contain the text, title, and link to the document.
+
+chunk_document(): it take the document text and chunk it based on the chunking strategy mentioned above. Return a dictionary containing the list of chunks, metadatas including the document name and links, and an unique idea for dedeuplication for ChromaDB
 
 **Milestone 4 — Embedding and retrieval:**
+embed_and_store(): take a list of chunk and store it in the ChromaDB database using all-MiniLM-L6-v2
+
+retrive(): take a query and a top-k (7) value, return the top-k chunks, which include the text, the metadatas and the distance.
 
 **Milestone 5 — Generation and interface:**
+generate_response(): take the user query and the retrived chunk and generate a responser. Recommend only locations that are retrived from the text. Identify where the recommendation came from. Acknowledge clearly if there are no locations that fit the user criteria or if the question is outside the agent domain.

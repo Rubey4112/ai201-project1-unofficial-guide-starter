@@ -47,28 +47,62 @@ def load_documents() -> list[dict]:
 
 def chunk_document(doc: dict) -> dict:
     """
-    Chunk a single document using a sliding word window.
+    Chunk a single document by markdown header, then paragraph, then sentence.
 
-    Strategy (from planning.md):
-        chunk_size = 150 words, overlap = 8 words, min_words = 8
+    Each `#`-prefixed header starts a new section. Sections within max_words
+    are kept whole; oversized sections fall back to paragraph then sentence
+    splits. Small segments are grouped until target_words is reached.
 
     Returns a dict with:
         chunks    — list of chunk strings
         metadatas — list of dicts (title, source, url) — one per chunk
         ids       — list of unique SHA-256 hex strings for ChromaDB deduplication
     """
-    chunk_size = 100
-    overlap = 20
+    target_words = 100
+    max_words = 150
     min_words = 8
 
-    words = doc["text"].split()
+    # Split on markdown headers (##, ###, etc.), keeping the header line with its section
+    header_sections = re.split(r"(?=^#{1,6}\s)", doc["text"], flags=re.MULTILINE)
+
+    segments: list[str] = []
+    for section in header_sections:
+        section = section.strip()
+        if not section:
+            continue
+        if len(section.split()) <= max_words:
+            segments.append(section)
+        else:
+            for para in re.split(r"\n\s*\n", section):
+                para = para.strip()
+                if not para:
+                    continue
+                if len(para.split()) <= max_words:
+                    segments.append(para)
+                else:
+                    for sent in re.split(r"(?<=[.!?])\s+", para):
+                        if sent.strip():
+                            segments.append(sent.strip())
+
     chunks: list[str] = []
-    start = 0
-    while start < len(words):
-        window = words[start : start + chunk_size]
-        if len(window) >= min_words:
-            chunks.append(" ".join(window))
-        start += chunk_size - overlap
+    current_parts: list[str] = []
+    current_wc = 0
+
+    for seg in segments:
+        seg_wc = len(seg.split())
+        if current_parts and current_wc + seg_wc > max_words:
+            if current_wc >= min_words:
+                chunks.append("\n\n".join(current_parts))
+            current_parts, current_wc = [], 0
+        current_parts.append(seg)
+        current_wc += seg_wc
+        if current_wc >= target_words:
+            if current_wc >= min_words:
+                chunks.append("\n\n".join(current_parts))
+            current_parts, current_wc = [], 0
+
+    if current_parts and current_wc >= min_words:
+        chunks.append("\n\n".join(current_parts))
 
     meta = {"title": doc["title"], "source": doc["source"], "url": doc["url"]}
     metadatas = [meta for _ in chunks]

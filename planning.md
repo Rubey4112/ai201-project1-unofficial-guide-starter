@@ -48,16 +48,20 @@ Each chunk would have metadata.
 
 **Chunk size:**
 
-Recursive chunking with a size of 150 words.
-Min words count of 8 words
+Semantic chunking using a three-level hierarchy:
+1. **Markdown headers** (`#` – `######`) — each header and its content is kept together as the primary boundary.
+2. **Paragraphs** — if a header section exceeds 150 words, it is split further on blank lines.
+3. **Sentences** — if a paragraph still exceeds 150 words, it is split on sentence-ending punctuation.
+
+Segments are grouped until a target of 100 words is reached (soft ceiling: 150 words hard cap). Min chunk size: 8 words.
 
 **Overlap:**
 
-8 words overlap
+No overlap. Header/paragraph/sentence boundaries already preserve context naturally, so sliding-window overlap is not needed.
 
 **Reasoning:**
 
-Most of the document will be guide and reviews. Some guide are long but some are short. I found that ~150 woords chunk capture each document nicely.
+Most documents are guides and reviews with clear markdown section headers. Splitting at headers keeps each topic self-contained, which improves retrieval precision. A query about dining shouldn't pull in a chunk that mixes dining and live music just because of a fixed word window. Paragraph and sentence fallbacks handle the few sections that are too long to keep whole.
 
 ---
 
@@ -123,7 +127,7 @@ all-MiniLM-L6-v2 is not as accurate as larger model but it is free and can be ru
 
 ```mermaid
 flowchart LR
-    A[Manual .md documents] --> B[Chunk document. 150 words with 8 words overlap]
+    A[Manual .md documents] --> B[Chunk by header → paragraph → sentence. Target 100w, max 150w]
     B --> C[Embed chunk locally using all-MiniLM-L6-v2]
     C --> D[Store locally in ChromaDB]
     D --> E[Retrive the top 7 chunks]

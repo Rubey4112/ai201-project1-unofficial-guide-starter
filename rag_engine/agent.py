@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 from groq import Groq
@@ -11,7 +12,7 @@ _CLIENT: Groq | None = None
 _MODEL = "llama-3.3-70b-versatile"
 
 _SYSTEM_PROMPT = """\
-You are a helpful local guide for George Mason University (GMU) students and the DMV area \
+You are a friendly and helpful local guide for George Mason University (GMU) students and the DMV area \
 (DC, Maryland, Virginia).
 Your knowledge comes exclusively from the retrieved context provided below.
 
@@ -48,8 +49,18 @@ def _build_context(chunks: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def generate_response(query: str, retrieved_chunks: list[dict]) -> dict:
+def generate_response(
+    query: str,
+    retrieved_chunks: list[dict],
+    history: list[dict] | None = None,
+) -> dict:
     """Generate a grounded response from retrieved chunks using Groq.
+
+    Args:
+        query: The user's current question.
+        retrieved_chunks: Output from retrieve() for the current query.
+        history: Prior turns as a list of {"role": "user"|"assistant", "content": str}
+                 dicts. Pass [] or omit for a fresh conversation.
 
     Returns:
         dict with:
@@ -69,12 +80,14 @@ def generate_response(query: str, retrieved_chunks: list[dict]) -> dict:
     context = _build_context(retrieved_chunks)
     user_message = f"Context:\n{context}\n\nQuestion: {query}"
 
+    messages: list[Any] = [{"role": "system", "content": _SYSTEM_PROMPT}]
+    if history:
+        messages.extend(history)
+    messages.append({"role": "user", "content": user_message})
+
     response = _get_client().chat.completions.create(
         model=_MODEL,
-        messages=[
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user", "content": user_message},
-        ],
+        messages=messages,
         temperature=0.3,
         max_tokens=1024,
     )

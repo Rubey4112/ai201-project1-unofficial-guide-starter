@@ -97,7 +97,7 @@ all-MiniLM-L6-v2 is not as accurate as larger model but it is free and can be ru
 
 | # | Question | Expected answer |
 |---|----------|-----------------|
-| 1 | What are some student discount available for GMU students | System should list specific restaurants or deals from the Patriot Perks food & drink page (e.g., specific discounts at named local restaurants) |
+| 1 | What are some student discount available for GMU students? | System should list specific restaurants or deals from the Patriot Perks food & drink page (e.g., specific discounts at named local restaurants) |
 | 2 | What are some popular live music venues around the DMV area? | System should name specific venues from the DC music venues source: 9:30 Club, The Anthem, Black Cat |
 | 3 | What are some advice to incoming freshman about joining the community at GMU | System should surface specific tips from the r/gmu threads. E.g., joining clubs, attending on-campus events and cite the Reddit source |
 | 4 | What are some low-cost or free things to do near GMU's Fairfax campus on a weekend? | System should recommend specific activities from the Fairfax VA and Patriot Perks sources |
@@ -169,4 +169,6 @@ retrive(): take a query and a top-k (7) value, return the top-k chunks, which in
 
 generate_response(): take the user query and the retrived chunk and generate a responser. Recommend only locations that are retrived from the text. Identify where the recommendation came from. Acknowledge clearly if there are no locations that fit the user criteria or if the question is outside the agent domain.
 
-For now, there will only be a CLI interface. It feature a debug mode where I can test run the chunk retrival based on the user query, and a dry-run mode where I can see the prompt that will be sent to the LLM.
+There will be a CLI interface allowing me to test the chunk retrival.
+
+The main UI will use gradio for conversational chat.

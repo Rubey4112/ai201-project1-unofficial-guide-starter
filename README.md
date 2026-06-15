@@ -1,12 +1,5 @@
 # The Unofficial Guide — Project 1
 
-> **How to use this template:**
-> Complete each section *after* you've built and tested the corresponding part of your system.
-> Do not write placeholder text — if a section isn't done yet, leave it blank and come back.
-> Every section below is required for submission. One-liners will not receive full credit.
-
----
-
 ## Domain
 
 <!-- What topic or category of knowledge does your system cover?
@@ -71,8 +64,8 @@ No overlap. Header/paragraph/sentence boundaries already preserve context natura
 Most documents are guides and reviews with clear markdown section headers. Splitting at headers keeps each topic self-contained, which improves retrieval precision. A query about dining shouldn't pull in a chunk that mixes dining and live music just because of a fixed word window. Paragraph and sentence fallbacks handle the few sections that are too long to keep whole.
 
 **Final chunk count:**
-
 129 chunks from 10 documents.
+
 ---
 
 ## Embedding Model
@@ -117,7 +110,9 @@ Rules:
    and do not make up an answer.
 4. If the question is outside your domain (GMU student life, local events, DMV-area dining and \
    activities), politely decline and explain your scope is limited to GMU and the DMV area.
-5. Do not invent, hallucinate, or extrapolate beyond what the sources say.\
+5. Do not invent, hallucinate, or extrapolate beyond what the sources say.
+6. Use the conversation history (prior messages) to understand follow-up questions, resolve \
+   pronouns, and maintain continuity — but ground every answer in the current retrieved sources.\
 """
 ```
 
@@ -133,11 +128,11 @@ Rules:
 
 | # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
 |---|----------|-----------------|------------------------------|-------------------|-------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | What are some student discount available for GMU students? | The system provided discount from the official GMU Patriot Perk website gmu.edu/patriot-perk  | The system provided discount from Bonds Escape Room and r/gmu | Partially relevant (Fail to retrieve discount from gmu.edu/patriot-perk) | Accurate |
+| 2 | What are some popular live music venues around the DMV area? |  System should name specific venues from the DC music venues source: 9:30 Club, The Anthem, Black Cat | The system provided music venues from DC and Virginia | Relevant | Accurate |
+| 3 | What are some advice to incoming freshman about joining the community at GMU? | System should surface specific tips from the r/gmu threads. E.g., joining clubs, attending on-campus events and cite the Reddit sources | System recommended talking to professors, attending around campus and local area, and utilizing students discount | Relevant | Accurate |
+| 4 | What are some low-cost or free things to do near GMU's Fairfax campus on a weekend? | System should recommend specific activities from the Fairfax VA and Patriot Perks sources | The system recommend  Fair Lakes, Fair Oaks Mall, or Fairfax Corner, and the on-campus student center | Relevant | Accurate |
+| 5 | What's the best professor for MATH214 | System refuse to response since the question is outside its domain | System should refuse to response since the question is outside its domain | Off-target (question is not in domain) | Accurate  |
 
 **Retrieval quality:** Relevant / Partially relevant / Off-target  
 **Response accuracy:** Accurate / Partially accurate / Inaccurate
@@ -157,13 +152,25 @@ Rules:
      "The embedding model treated the professor's nickname as out-of-vocabulary and returned
      results from an unrelated review" is an explanation. -->
 
+The question `What are some student discount available for GMU students?` should have returned an answer with discount from gmu.edu/patriot-perk.
+
 **Question that failed:**
+What are some student discount available for GMU students?
 
 **What the system returned:**
+```
+According to the sources, GMU students can enjoy various discounts. For instance, students can get a 20% discount at Bonds Escape Room (Source 5: https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide). Additionally, Mason students can grab up to two free tickets per show at the Center for the Arts (Source 7: https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide). Students can also get discounts at Eagle Bank events, including concerts and comedians (Source 2: https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/). Furthermore, students can enjoy a free movie ticket every month at the movie theater in University Mall (Source 2: https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/). It's also mentioned that students can get discounts by flashing their GMU ID at various spots, and by following spots on Instagram for flash sales and student promos (Source 1: https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide).
+
+Retrieved from:
+• Epic Things to Do Near GMU: Student Guide — https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide
+• Looking at going to gmu, what is there to do for fun around gmu? — https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/
+```
 
 **Root cause (tied to a specific pipeline stage):**
+This is caused by the retrival function. Querying for "discount" doesn't seem to find match with result that has description like "15% off" using sementic search.
 
 **What you would change to fix it:**
+I would improve my retrival algorithm. Adding hybrid search using BM25 might include retrival quality.
 
 ---
 
@@ -193,12 +200,8 @@ Initally, I had it in the spec that the chunking should be done with a fixed len
 
 **Instance 1**
 
-- *What I gave the AI:*
-- *What it produced:*
-- *What I changed or overrode:*
+I gave to the Claude the list of links that I planned to use as the sources for my RAG engine and asked it to write me a web scraper. Claude gave me a scraper that put the content of each webpage in a markdown file with a metadata field in yaml. I had to manually copy a few of the website over. I also had to rewrite the scraping function to read predowloaded reddit thread json since reddit block the scraping script. 
 
 **Instance 2**
 
-- *What I gave the AI:*
-- *What it produced:*
-- *What I changed or overrode:*
+I gave the Claude my initial plan for chunk_document(). Claude then produced a chunk document function that used a fixed chunk_size = 100, overlap = 20, min_words = 8. I tested this chunker and found that it split relevant content accross chunk boundary. So, I updated my spec to that document are split based on based on markdown header first before splitting based on word counts. This significantly improved retrival result.

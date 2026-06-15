@@ -1,12 +1,5 @@
 # Project 1 Planning: The Unofficial Guide
 
-> Write this document before you write any pipeline code.
-> Your spec and architecture diagram are what you'll use to direct AI tools (Claude, Copilot, etc.) to generate your implementation — the more specific they are, the more useful the generated code will be.
-> Update the Retrieval Approach and Chunking Strategy sections if you change your approach during implementation.
-> Update this file before starting any stretch features.
-
----
-
 ## Domain
 
 <!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
@@ -99,9 +92,9 @@ all-MiniLM-L6-v2 is not as accurate as larger model but it is free and can be ru
 |---|----------|-----------------|
 | 1 | What are some student discount available for GMU students? | System should list specific restaurants or deals from the Patriot Perks food & drink page (e.g., specific discounts at named local restaurants) |
 | 2 | What are some popular live music venues around the DMV area? | System should name specific venues from the DC music venues source: 9:30 Club, The Anthem, Black Cat |
-| 3 | What are some advice to incoming freshman about joining the community at GMU | System should surface specific tips from the r/gmu threads. E.g., joining clubs, attending on-campus events and cite the Reddit source |
+| 3 | What are some advice to incoming freshman about joining the community at GMU? | System should surface specific tips from the r/gmu threads. E.g., joining clubs, attending on-campus events and cite the Reddit sources |
 | 4 | What are some low-cost or free things to do near GMU's Fairfax campus on a weekend? | System should recommend specific activities from the Fairfax VA and Patriot Perks sources |
-| 5 | What's the best professor for MATH214 | System should refuse to response since it is outside it's domain  |
+| 5 | What's the best professor for MATH214 | System should refuse to response since it is outside its domain  |
 
 ---
 
@@ -167,7 +160,7 @@ retrive(): take a query and a top-k (7) value, return the top-k chunks, which in
 
 **Milestone 5 — Generation and interface:**
 
-generate_response(): take the user query and the retrived chunk and generate a responser. Recommend only locations that are retrived from the text. Identify where the recommendation came from. Acknowledge clearly if there are no locations that fit the user criteria or if the question is outside the agent domain.
+generate_response(): take the user query and the retrived chunk and generate a response. Recommend only locations that are retrived from the text. Identify where the recommendation came from. Acknowledge clearly if there are no locations that fit the user criteria or if the question is outside the agent domain.
 
 There will be a CLI interface allowing me to test the chunk retrival.
 

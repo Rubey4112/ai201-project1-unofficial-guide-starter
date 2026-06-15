@@ -28,9 +28,11 @@ with gr.Blocks() as demo:
     with gr.Row():
         inp = gr.Textbox(label="Your question", placeholder="Ask about things to do, food, events…", scale=4)
         btn = gr.Button("Ask", scale=1)
+        clear_btn = gr.Button("New Chat", scale=1)
     sources = gr.Textbox(label="Retrieved from", lines=4, interactive=False)
 
     btn.click(handle_query, inputs=[inp, chatbot, api_history], outputs=[inp, chatbot, api_history, sources])
     inp.submit(handle_query, inputs=[inp, chatbot, api_history], outputs=[inp, chatbot, api_history, sources])
+    clear_btn.click(lambda: ([], [], ""), outputs=[chatbot, api_history, sources])
 
 demo.launch()

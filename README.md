@@ -66,6 +66,56 @@ Most documents are guides and reviews with clear markdown section headers. Split
 **Final chunk count:**
 129 chunks from 10 documents.
 
+### Chunking Strategy Comparison
+
+Chunking based on markdown header resulted in better result (lower distance score). It reduces the occurance of relevant information being split accross chunk boundary.
+
+#### Chunking using fixed length (chunk_size = 100, overlap = 20, min_words = 8)
+182 chunks from 10 documents.
+```
+Query: What are some popular live music venues around the DMV area?
+ChromaDB not found — ingesting documents...
+Stored 182 chunks from 10 documents.
+
+  Top 7 chunks for: "What are some popular live music venues around the DMV area?"
+
+  [1] distance: 0.3916
+      source:   DC's Website — DC Music Venues You Have to Experience
+      url:      https://washington.org/visit-dc/live-music-venues-washington-dc
+      text:     ## Check out the best places to go to catch a show in Washington, DC When it comes to DC’s music legends, the landscape is as diverse as the city itself: Duke Ellington, Chuck Brown, Marvin Gaye, Ian MacKaye, Dave Grohl and Wale all share space atop the District’s musical Rushmore. Each artist has i...
+
+  [2] distance: 0.4603
+      source:   DC's Website — DC Music Venues You Have to Experience
+      url:      https://washington.org/visit-dc/live-music-venues-washington-dc
+      text:     music scene is all about. Whether you prefer jazz, go-go, hardcore punk, hip-hop, dance or anything in between, you can find it on any given night in the District at these live music meccas. #### 01 ### 9:30 Club The 9:30 Club has been at the forefront of the District’s music scene since its incepti...
+```
+
+#### Chunking based on markdown header. (target_words = 100, max_words = 150, min_words = 8)
+129 chunks from 10 documents.
+```
+Query: What are some popular live music venues around the DMV area?
+
+  Top 7 chunks for: "What are some popular live music venues around the DMV area?"
+
+  [1] distance: 0.3831
+      source:   DC's Website — DC Music Venues You Have to Experience
+      url:      https://washington.org/visit-dc/live-music-venues-washington-dc
+      text:     ## Check out the best places to go to catch a show in Washington, DC
+
+
+When it comes to DC’s music legends, the landscape is as diverse as the city itself: Duke Ellington, Chuck Brown, Marvin Gaye, Ian MacKaye, Dave Grohl and Wale all share space atop the District’s musical Rushmore. Each artist has...
+
+  [2] distance: 0.4368
+      source:   DC's Website — DC Music Venues You Have to Experience
+      url:      https://washington.org/visit-dc/live-music-venues-washington-dc
+      text:     #### 01
+
+### 9:30 Club
+
+
+The 9:30 Club has been at the forefront of the District’s music scene since its inception, and made its bones in the ‘80s hosting soon-to-shine acts including Chuck Brown, Red Hot Chili Peppers and The Police. Since moving to its current location in 1996, world famous acts l...
+```
+
 ---
 
 ## Embedding Model
@@ -204,4 +254,4 @@ I gave to the Claude the list of links that I planned to use as the sources for 
 
 **Instance 2**
 
-I gave the Claude my initial plan for chunk_document(). Claude then produced a chunk document function that used a fixed chunk_size = 100, overlap = 20, min_words = 8. I tested this chunker and found that it split relevant content accross chunk boundary. So, I updated my spec to that document are split based on based on markdown header first before splitting based on word counts. This significantly improved retrival result.
+I gave the Claude my initial plan for chunk_document(). Claude then produced a chunk document function that used a fixed chunk_size = 100, overlap = 20, min_words = 8. I tested this chunker and found that it split relevant content accross chunk boundary. So, I updated my spec to that document are split based on based on markdown header first before splitting based on word counts. This significantly improved retrival result. A more detailed comparison is included in the Chunking Strategy section.

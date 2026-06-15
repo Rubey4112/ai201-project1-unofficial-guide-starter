@@ -44,6 +44,39 @@ def load_documents() -> list[dict]:
         )
     return docs
 
+def chunk_document_by_window(doc: dict) -> dict:
+    """
+    Chunk a single document using a sliding word window.
+
+    Strategy (from planning.md):
+        chunk_size = 150 words, overlap = 8 words, min_words = 8
+
+    Returns a dict with:
+        chunks    — list of chunk strings
+        metadatas — list of dicts (title, source, url) — one per chunk
+        ids       — list of unique SHA-256 hex strings for ChromaDB deduplication
+    """
+    chunk_size = 100
+    overlap = 20
+    min_words = 8
+
+    words = doc["text"].split()
+    chunks: list[str] = []
+    start = 0
+    while start < len(words):
+        window = words[start : start + chunk_size]
+        if len(window) >= min_words:
+            chunks.append(" ".join(window))
+        start += chunk_size - overlap
+
+    meta = {"title": doc["title"], "source": doc["source"], "url": doc["url"]}
+    metadatas = [meta for _ in chunks]
+    ids = [
+        hashlib.sha256(f"{doc['url']}::chunk_{i}".encode()).hexdigest()[:32]
+        for i in range(len(chunks))
+    ]
+
+    return {"chunks": chunks, "metadatas": metadatas, "ids": ids}
 
 def chunk_document(doc: dict) -> dict:
     """

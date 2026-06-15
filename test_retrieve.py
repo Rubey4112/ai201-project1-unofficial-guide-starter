@@ -2,23 +2,12 @@
 
 import sys
 
-from rag_engine.ingest import chunk_document, load_documents
-from rag_engine.retriever import embed_and_store, retrieve
+from rag_engine.retriever import retrieve
 
 TOP_K = 7
 
 
-def _populate_db() -> None:
-    print("Populating ChromaDB...")
-    docs = load_documents()
-    chunk_results = [chunk_document(doc) for doc in docs]
-    total = sum(len(r["chunks"]) for r in chunk_results)
-    embed_and_store(chunk_results)
-    print(f"Stored {total} chunks from {len(docs)} documents.\n")
-
-
 def main() -> None:
-    _populate_db()
     print("RAG Retrieval Tester — type a query and press Enter (Ctrl+C to quit)\n")
 
     while True:

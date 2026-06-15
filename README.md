@@ -551,3 +551,6 @@ I gave to the Claude the list of links that I planned to use as the sources for 
 **Instance 2**
 
 I gave the Claude my initial plan for chunk_document(). Claude then produced a chunk document function that used a fixed chunk_size = 100, overlap = 20, min_words = 8. I tested this chunker and found that it split relevant content accross chunk boundary. So, I updated my spec to that document are split based on based on markdown header first before splitting based on word counts. This significantly improved retrival result. A more detailed comparison is included in the Chunking Strategy section.
+
+## Video Demo
+[Demo](https://youtu.be/CqKwGnqLoSk)

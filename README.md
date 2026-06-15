@@ -66,9 +66,114 @@ Most documents are guides and reviews with clear markdown section headers. Split
 **Final chunk count:**
 129 chunks from 10 documents.
 
+**Sample chunks**
+```
+============================================================
+DOC: DC Music Venues You Have to Experience
+Total chunks: 10
+============================================================
+
+--- Chunk 1 (114 words) ---
+## Check out the best places to go to catch a show in Washington, DC
+
+
+When it comes to DC’s music legends, the landscape is as diverse as the city itself: Duke Ellington, Chuck Brown, Marvin Gaye, Ian MacKaye, Dave Grohl and Wale all share space atop the District’s musical Rushmore. Each artist has influenced the local landscape for years, but what’s the scene like these days?
+
+
+With venues all over the city, it's time to discover what the DC music scene is all about. Whether you prefer jazz, go-go, hardcore punk, hip-hop, dance or anything in between, you can find it on any given night in the District at these live music meccas.
+
+--- Chunk 2 (131 words) ---
+### 01
+
+#### 9:30 Club
+
+
+The 9:30 Club has been at the forefront of the District’s music scene since its inception, and made its bones in the ‘80s hosting soon-to-shine acts including Chuck Brown, Red Hot Chili Peppers and The Police. Since moving to its current location in 1996, world famous acts like Bob Dylan, The Beastie Boys and Radiohead have graced its stage.
+
+**815 V Street NW, Washington, DC 20001**
+
+### 02
+
+#### The Anthem
+
+
+The Anthem solves the age-old problem prominent rockers and hot hip-hop stars face when performing in DC: What’s bigger than the legendary 9:30 Club but more intimate than an arena? The answer is the acoustically optimized, 6,000-seat concert hall operated by I.M.P. (of 9:30 Club fame).
+
+Upcoming shows
+
+**901 Wharf Street SW, Washington, DC 20024**
+
+--- Chunk 3 (61 words) ---
+### 03
+
+#### Union Stage
+
+
+Also located at The Wharf, Union Stage offers a slew of shows upon its reopening, including a wide range of independent acts. The intimate setting means you’ll get to enjoy a healthy dose of sound, and you can also order beers and pizza from their Tap Room.
+
+**740 Water Street SW, Washington, DC 20024**
+
+### 04
+
+...
+
+============================================================
+DOC: Your DC Bucket List
+Total chunks: 4
+============================================================
+
+--- Chunk 1 (102 words) ---
+## There are just some things you NEED to do in the nation’s capital.
+
+
+You don’t have to experience these in any order, but you do have to experience them all. Each activity illustrates how There’s Only One DC and many can be enjoyed for free.
+
+
+*What’d we leave out? Does your DC Bucket List differ? Follow us on Instagram & TikTok and let us know your favorite activities in the District.*
+
+### 01
+
+#### See the Charters of Freedom: the U.S. Bill of Rights, the U.S. Constitution and the Declaration of Independence.
+
+
+Plan a visit to the free National Archives Building.
+
+--- Chunk 2 (117 words) ---
+### 02
+
+#### View the Star-Spangled Banner.
+
+
+National Museum of American History
+
+Experience the National Museum of American History for free.
+
+### 04
+
+#### See a show in DC.
+
+
+Historic theaters include The John F. Kennedy Center for the Performing Arts and Ford’s Theatre.
+
+### 05
+
+#### Experience two museums and a beautiful courtyard, all in one building.
+
+
+The Smithsonian American Art Museum and the National Portrait Gallery reside in the same building. After you tour both, hang out and have a bite to eat and some refreshments at the Kogod Courtyard.
+
+### 06
+
+#### Explore DC's distinct neighborhoods.
+
+
+They're all worth exploring. Popular gathering spots include Georgetown, Southwest & The Wharf, Dupont Circle and U Street.
+```
+
+
 ### Chunking Strategy Comparison
 
-Chunking based on markdown header resulted in better result (lower distance score). It reduces the occurance of relevant information being split accross chunk boundary.
+Chunking based on markdown header resulted in better result (lower distance score). It reduces the occurance of relevant information being split accross chunk boundary, i.e. a header and its corresponding section is kept together.
 
 #### Chunking using fixed length (chunk_size = 100, overlap = 20, min_words = 8)
 182 chunks from 10 documents.
@@ -110,7 +215,7 @@ When it comes to DC’s music legends, the landscape is as diverse as the city i
       url:      https://washington.org/visit-dc/live-music-venues-washington-dc
       text:     #### 01
 
-### 9:30 Club
+#### 9:30 Club
 
 
 The 9:30 Club has been at the forefront of the District’s music scene since its inception, and made its bones in the ‘80s hosting soon-to-shine acts including Chuck Brown, Red Hot Chili Peppers and The Police. Since moving to its current location in 1996, world famous acts l...
@@ -133,6 +238,87 @@ all-MiniLM-L6-v2 via sentence-transformers
 Lower chunk reduce token cost but might give the LLM too little context. Since the chunks are quite small and user might ask broad questions, I put the top-k = 7 so that the LLM can have more context at the expense of token cost.
 I went with pure sementic search currently since it is the simplest solution, but a hybrid search with a keyword index using BM25 would be better.
 all-MiniLM-L6-v2 is not as accurate as larger model but it is free and can be run locally.
+
+### Retrival Test Result
+
+The below retrival found music venues around DC that are relevant to the query.
+```
+Query: What are some popular live music venues around the DMV area?
+
+  Top 7 chunks for: "What are some popular live music venues around the DMV area?"
+
+  [1] distance: 0.3831
+      source:   DC's Website — DC Music Venues You Have to Experience
+      url:      https://washington.org/visit-dc/live-music-venues-washington-dc
+      text:     ## Check out the best places to go to catch a show in Washington, DC
+
+
+When it comes to DC’s music legends, the landscape is as diverse as the city itself: Duke Ellington, Chuck Brown, Marvin Gaye, Ian MacKaye, Dave Grohl and Wale all share space atop the District’s musical Rushmore. Each artist has...
+
+  [2] distance: 0.4362
+      source:   DC's Website — DC Music Venues You Have to Experience
+      url:      https://washington.org/visit-dc/live-music-venues-washington-dc
+      text:     ### 01
+
+#### 9:30 Club
+
+
+The 9:30 Club has been at the forefront of the District’s music scene since its inception, and made its bones in the ‘80s hosting soon-to-shine acts including Chuck Brown, Red Hot Chili Peppers and The Police. Since moving to its current location in 1996, world famous acts l...
+```
+
+The retrival found tips relevant to the query suggested by users on r/gmu.
+```
+Query: What are some advice to incoming freshman about joining the community at GMU?
+
+  Top 7 chunks for: "What are some advice to incoming freshman about joining the community at GMU?"
+
+  [1] distance: 0.3261
+      source:   r/gmu — Anyone have any tips for incoming GMU freshman?
+      url:      https://www.reddit.com/r/gmu/comments/1k9mks/anyone_have_any_tips_for_incoming_gmu_freshman/
+      text:     # Anyone have any tips for incoming GMU freshman?
+
+**UPVOTEMECUZCAPSLOCK** (OP): Tips can be everything from saying the best places to eat at campus or just some advice.
+
+---
+
+**DEMAG**: Going to class will get you a degree. Going to class and studying will get you a degree with honors.
+
+It's amazin...
+
+  [2] distance: 0.3452
+      source:   Bond's Entertainment Center — Epic Things to Do Near GMU: Student Guide
+      url:      https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide
+      text:     #### Ready for Your Next Adventure?
+
+Stop scrolling and start experiencing! Book your Bonds Escape Room adventure today — it's literally the most fun you can have near campus, and with that 20% student discount, it's basically a steal.
+Reserve Your Spot Now!
+
+🎯 Remember: The best things to do near G...
+```
+
+```
+Query: What are some low-cost or free things to do near GMU's Fairfax campus on a weekend?
+
+  Top 7 chunks for: "What are some low-cost or free things to do near GMU's Fairfax campus on a weekend?"
+
+  [1] distance: 0.2161
+      source:   r/gmu — Looking at going to gmu, what is there to do for fun around gmu?
+      url:      https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/
+      text:     # Looking at going to gmu, what is there to do for fun around gmu?
+
+**owoqwertyowo** (OP): Title
+
+---
+
+**Starfire123547**: dont listen to these kids. As someone not entierly from the area (from richmond) the entierty of dc is at your finger tips. theres a free metro bus. so metro anything. (museams,...
+
+  [2] distance: 0.2235
+      source:   Bond's Entertainment Center — Epic Things to Do Near GMU: Student Guide
+      url:      https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide
+      text:     ## Epic Things to Do Near GMU: Break Out of the Study Grind
+
+Stuck in the "study-sleep-repeat" cycle? Time to shake things up! Fairfax has way more cool stuff than most GMU students realize — escape rooms, cheap eats, nature spots, and hidden gems that even upperclassmen haven't tried. Best part? Mo...
+```
 
 ---
 
@@ -166,7 +352,117 @@ Rules:
 """
 ```
 
-**How source attribution is surfaced in the response:**
+**Sample interaction**
+How source attribution is surfaced in the response:
+
+```
+Question:
+What are some popular live music venues around the DMV area?
+
+Answer: 
+There are several popular live music venues around the DMV area. In Washington, D.C., some notable venues include the 9:30 Club (https://washington.org/visit-dc/live-music-venues-washington-dc), The Anthem (https://washington.org/visit-dc/live-music-venues-washington-dc), Echostage (https://washington.org/visit-dc/live-music-venues-washington-dc), The Hamilton Live (https://washington.org/visit-dc/live-music-venues-washington-dc), and DC9 (https://washington.org/visit-dc/live-music-venues-washington-dc). 
+
+In Fairfax, VA, the George Mason Eagle Bank Arena (https://virginiavacationguide.com/things-to-do-in-fairfax-va/) is a top entertainment venue that hosts various events, including concerts and sporting events.
+
+These venues offer a range of music genres and experiences, from intimate settings to larger concert halls. You can find more information about each venue, including their schedules and locations, by visiting the provided URLs.
+```
+
+```
+Question:
+What are some advice to incoming freshman about joining the community at GMU?
+
+Answer:
+According to the sources, here are some advice for incoming freshmen about joining the community at GMU:
+
+* Talk to your professors and be personal with them, as they will remember you when you need help (Source 1: https://www.reddit.com/r/gmu/comments/1k9mks/anyone_have_any_tips_for_incoming_gmu_freshman/).
+* Attend classes and study to get a degree with honors, and also to understand the material better (Source 1: https://www.reddit.com/r/gmu/comments/1k9mks/anyone_have_any_tips_for_incoming_gmu_freshman/).
+* Join a campus organization to find consistent activities and events (Source 5: https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/).
+* Take advantage of on-campus perks such as free shows at the Center for the Arts and catching a game at EagleBank Arena (Source 7: https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide).
+* Explore the local area, including Fairfax, to find fun things to do and make memories with friends (Source 2: https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide, Source 3: https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide, Source 4: https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/, Source 5: https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/).
+
+These sources suggest that getting involved in the community, attending events, and exploring the local area can help incoming freshmen make the most of their time at GMU.
+```
+
+```
+Question:
+What's the best professor for MATH214
+
+Answer:
+The provided sources do not contain information about the best professor for MATH 214. The sources primarily discuss tips for incoming GMU freshmen, escape rooms, and discounts on food and activities for GMU students. They do not provide specific information about professors or courses.
+```
+
+
+---
+
+## Interface
+
+### Input Fields
+
+| Field | Label | Description |
+|-------|-------|-------------|
+| **Query textbox** | "Your question" | Main text input where the user types a question. Placeholder reads "Ask about things to do, food, events…". Pressing **Enter** or clicking **Ask** submits the query. The box clears automatically after each submission. |
+| **Ask button** | "Ask" | Submits the current query. Equivalent to pressing Enter in the textbox. |
+| **New Chat button** | "New Chat" | Resets the entire session — clears conversation history, API message history, and the sources panel. |
+
+### Output Fields
+
+| Field | Label | Description |
+|-------|-------|-------------|
+| **Chatbot display** | "Conversation" | Scrollable chat window (450 px tall) that renders the full turn-by-turn conversation. User messages appear on the right; assistant responses appear on the left. Persists across turns until **New Chat** is clicked. |
+| **Sources panel** | "Retrieved from" | Read-only, 4-line textbox beneath the query row. After each response it lists the titles and URLs of every document the retriever surfaced, so the user knows exactly which sources grounded the answer. |
+
+### Sample Interaction Transcript
+
+The transcript below shows one complete turn: user input → retrieval → grounded response → source attribution.
+
+---
+
+**Query textbox input**
+```
+What are some low-cost or free things to do near GMU's Fairfax campus on a weekend?
+```
+
+---
+
+**Chatbot display — User turn**
+```
+What are some low-cost or free things to do near GMU's Fairfax campus on a weekend?
+```
+
+**Chatbot display — Assistant turn**
+```
+Here are some low-cost or free things to do near GMU's Fairfax campus on a weekend:
+
+• **Explore DC for free** — hop on the free Metro bus and visit the Smithsonian museums,
+  the National Mall monuments, and the National Archives (all free admission).
+  (Source: r/gmu — "Looking at going to gmu, what is there to do for fun around gmu?")
+
+• **Fair Lakes, Fair Oaks Mall, and Fairfax Corner** — nearby walkable areas for window
+  shopping, people-watching, and inexpensive eats.
+  (Source: r/gmu — "Looking at going to gmu, what is there to do for fun around gmu?")
+
+• **Center for the Arts at GMU** — Mason students can grab up to two free tickets per
+  show; check the schedule for concerts and performances.
+  (Source: Epic Things to Do Near GMU: Student Guide —
+   https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide)
+
+• **EagleBank Arena on campus** — student discounts on sporting events, concerts, and
+  comedy shows throughout the year.
+  (Source: r/gmu — "Looking at going to gmu, what is there to do for fun around gmu?")
+
+If you'd like more details on any of these, just ask!
+```
+
+---
+
+**Sources panel output**
+```
+• r/gmu — Looking at going to gmu, what is there to do for fun around gmu?
+  https://www.reddit.com/r/gmu/comments/tdc7tz/looking_at_going_to_gmu_what_is_there_to_do_for/
+
+• Bond's Entertainment Center — Epic Things to Do Near GMU: Student Guide
+  https://bondsescaperoom.com/epic-things-to-do-near-gmu-student-guide
+```
 
 ---
 
